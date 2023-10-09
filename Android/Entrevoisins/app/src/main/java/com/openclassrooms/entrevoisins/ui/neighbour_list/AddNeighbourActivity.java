@@ -49,7 +49,11 @@ public class AddNeighbourActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mApiService = DI.getNeighbourApiService();
         init();
+
+
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -92,6 +96,8 @@ public class AddNeighbourActivity extends AppCompatActivity {
         mApiService.createNeighbour(neighbour);
         finish();
     }
+
+
 
     /**
      * Generate a random image. Useful to mock image picker

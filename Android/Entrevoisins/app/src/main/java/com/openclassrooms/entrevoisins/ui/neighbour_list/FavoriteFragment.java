@@ -2,9 +2,7 @@ package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.content.ClipData;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,38 +10,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.openclassrooms.entrevoisins.R;
 import com.openclassrooms.entrevoisins.di.DI;
-import com.openclassrooms.entrevoisins.events.DeleteNeighbourEvent;
 import com.openclassrooms.entrevoisins.model.Neighbour;
 import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.OnClick;
-
-
-public class NeighbourFragment extends Fragment {
+public class FavoriteFragment extends Fragment {
 
     private NeighbourApiService mApiService;
     private List<Neighbour> mNeighbours;
     private RecyclerView mRecyclerView;
-    private ItemClickListener listener;
 
-
-
-    /**
-     * Create and return a new instance
-     * @return @{@link NeighbourFragment}
-     */
-    public static NeighbourFragment newInstance() {
-        NeighbourFragment fragment = new NeighbourFragment();
-        return fragment;
+    public static FavoriteFragment newInstance(){
+        FavoriteFragment favorite = new FavoriteFragment();
+        return favorite;
     }
 
     @Override
@@ -63,41 +47,20 @@ public class NeighbourFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Init the List of neighbours
-     */
-    private void initList() {
+
+    private void initFavoriteList() {
+        /** C'est ici que j'aimerais récupérer une liste d'utilisateurs actualisée avec les favoris
+         * Sauf que là, j'appelle l'API donc j'ai la même liste qu'au début du lancement de l'application,
+         * qui n'a pas de favoris
+         * ---> Est ce que je peux actualiser la liste de NeighbourFragment et la passer ici ? */
+
         mNeighbours = mApiService.getNeighbours();
-        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(mNeighbours, false));
+        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(mNeighbours, true));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initList();
+        initFavoriteList();
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    /**
-     * Fired if the user clicks on a delete button
-     * @param event
-     */
-    @Subscribe
-    public void onDeleteNeighbour(DeleteNeighbourEvent event) {
-        mApiService.deleteNeighbour(event.neighbour);
-        initList();
-    }
-
-
 }
