@@ -1,5 +1,6 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -28,28 +29,11 @@ import butterknife.ButterKnife;
 public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeighbourRecyclerViewAdapter.ViewHolder> {
 
     private final List<Neighbour> mNeighbours;
-    private final boolean isFavorites;
+    private final ItemClickListener clickListener;
 
-    /** Donc le recyclerView, j'ai ajouté un paramètre boolean "favorites" pour filtrer si la liste vient
-     * de FavoriteFragment OU NeighbourFragment */
-    public MyNeighbourRecyclerViewAdapter(List<Neighbour> items, boolean favorites) {
-        this.isFavorites = favorites;
-        if (isFavorites) {
-            this.mNeighbours = filterFavorites(items);
-        } else{
-            this.mNeighbours = items;
-        }
-    }
-
-    /** Je filtre la liste avec cette fonction */
-    private List<Neighbour> filterFavorites(List<Neighbour> items){
-        List<Neighbour> favoritesList = new ArrayList<>();
-        for (Neighbour favorite : items){
-            if (favorite.isFavorite()){
-                favoritesList.add(favorite);
-            }
-        }
-        return favoritesList;
+    public MyNeighbourRecyclerViewAdapter(List<Neighbour> items, ItemClickListener clickListener) {
+        this.mNeighbours = items;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -67,10 +51,7 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, ShowNeighbourProfile.class);
-                intent.putExtra("neighbour", neighbour);
-                context.startActivity(intent);
+                clickListener.itemListener(neighbour);
             }
         });
 
