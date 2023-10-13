@@ -28,14 +28,11 @@ import java.util.List;
 import butterknife.OnClick;
 
 
-public class NeighbourFragment extends Fragment {
+public class NeighbourFragment extends Fragment implements ItemClickListener{
 
     private NeighbourApiService mApiService;
     private List<Neighbour> mNeighbours;
     private RecyclerView mRecyclerView;
-    private ItemClickListener listener;
-
-
 
     /**
      * Create and return a new instance
@@ -63,20 +60,16 @@ public class NeighbourFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Init the List of neighbours
-     */
     private void initList() {
         mNeighbours = mApiService.getNeighbours();
-        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(mNeighbours, false));
+        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(mNeighbours, this));
     }
 
-    @Override
+     @Override
     public void onResume() {
         super.onResume();
         initList();
     }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -100,4 +93,10 @@ public class NeighbourFragment extends Fragment {
     }
 
 
+    @Override
+    public void itemListener(Neighbour neighbour) {
+        Intent intent = new Intent(requireContext(), ShowNeighbourProfile.class);
+        intent.putExtra("neighbour", neighbour);
+        requireActivity().startActivity(intent);
+    }
 }

@@ -6,5 +6,5 @@ import com.openclassrooms.entrevoisins.model.Neighbour;
 
 public interface ItemClickListener {
 
-    void itemListener(int position, Neighbour neighbour);
+    void itemListener(Neighbour neighbour);
 }

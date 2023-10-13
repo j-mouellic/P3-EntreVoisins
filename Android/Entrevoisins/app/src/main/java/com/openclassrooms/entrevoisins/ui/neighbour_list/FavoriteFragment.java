@@ -1,7 +1,7 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
-import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -19,11 +19,14 @@ import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteFragment extends Fragment {
+public class FavoriteFragment extends Fragment implements ItemClickListener {
 
     private NeighbourApiService mApiService;
-    private List<Neighbour> mNeighbours;
     private RecyclerView mRecyclerView;
+    public List<Neighbour> favoriteNeighboursList = new ArrayList<>();
+    private List<Neighbour> neighbourList;
+
+
 
     public static FavoriteFragment newInstance(){
         FavoriteFragment favorite = new FavoriteFragment();
@@ -48,19 +51,26 @@ public class FavoriteFragment extends Fragment {
     }
 
 
-    private void initFavoriteList() {
-        /** C'est ici que j'aimerais récupérer une liste d'utilisateurs actualisée avec les favoris
-         * Sauf que là, j'appelle l'API donc j'ai la même liste qu'au début du lancement de l'application,
-         * qui n'a pas de favoris
-         * ---> Est ce que je peux actualiser la liste de NeighbourFragment et la passer ici ? */
+    private void initList() {
+        neighbourList = mApiService.getNeighbours();
+        for (Neighbour neighbour : neighbourList){
+            if (neighbour.isFavorite()){
+                favoriteNeighboursList.add(neighbour);
+            }
+        }
+        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(favoriteNeighboursList, this));
+    }
 
-        mNeighbours = mApiService.getNeighbours();
-        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(mNeighbours, true));
+      @Override
+    public void onResume() {
+        super.onResume();
+        initList();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        initFavoriteList();
+    public void itemListener(Neighbour neighbour) {
+        Intent intent = new Intent(requireContext(), ShowNeighbourProfile.class);
+        intent.putExtra("neighbour", neighbour);
+        requireActivity().startActivity(intent);
     }
 }

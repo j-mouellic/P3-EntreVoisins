@@ -3,4 +3,6 @@
     <string name="tab_neighbour_title">My neighbours</string>
     <string name="tab_favorites_title">Favorites</string>
     <string name="activity_new_neighbour">New neighbour</string>
+    <string name="about_me_title">À propos de moi</string>
+    <string name="about_me_text">Description du profil bientôt disponible</string>
 </resources>
