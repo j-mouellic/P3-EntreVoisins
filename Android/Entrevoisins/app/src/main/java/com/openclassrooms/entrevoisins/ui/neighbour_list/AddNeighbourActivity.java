@@ -49,8 +49,6 @@ public class AddNeighbourActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mApiService = DI.getNeighbourApiService();
         init();
-
-
     }
 
 
